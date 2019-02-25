@@ -1,0 +1,27 @@
+all:myapp
+OFILES=myapp prog1.o prog2.o prog4.o driver.o ./link/prog3.o
+CC=gcc
+LINKING=driver.c header.h link/prog3.h
+CFLAGS= -std=c11 -O0 -Wall -g
+
+myapp: $(OFILES)
+	$(CC) -o $(OFILES) $(CFLAGS)
+prog1.o: prog1.c
+	$(CC) -c prog1.c $(CFLAGS)
+prog2.o: prog2.c
+	$(CC) -c prog2.c $(CFLAGS)
+prog4.o: prog4.c
+	$(CC) -c prog4.c $(CFLAGS)
+driver.o: $(LINKING)
+	$(CC) -c driver.c -I./ -I./link/ $(CFLAGS)
+
+include: ./link/makefile 
+
+clean:
+	-@rm -f *.o ./link/prog3.o
+
+install: myapp
+	@cp myapp /usr/local/bin
+	@chmod a+x /usr/local/bin/myapp
+	@chmod og-w /usr/local/bin/myapp
+	echo "Installed successfully "
